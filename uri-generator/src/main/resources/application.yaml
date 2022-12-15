@@ -1,0 +1,14 @@
+app:
+  readPollTime: 1
+  maxMessagePerPoll: 1000
+  threadPoolCoreSize: 1
+  threadPoolPrefix: "url-repo-reader-pool"
+
+kafka.producer:
+  topic: si.topic
+  messageKey: id
+  brokerAddress: localhost:9092
+  zookeeperConnect: localhost:2181
+  retries: 5
+  keySerializer: org.apache.kafka.common.serialization.StringSerializer
+  valueSerializer: org.apache.kafka.common.serialization.StringSerializer

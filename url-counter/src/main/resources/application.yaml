@@ -1,0 +1,15 @@
+kafka.consumer:
+  topic: si.topic
+  brokerAddress: localhost:9092
+  zookeeperConnect: localhost:2181
+  retries: 5
+  consumerGroup: si.group
+  keyDeserializer: org.apache.kafka.common.serialization.StringDeserializer
+  valueDeserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+
+app:
+  minSeenToStore: 3
+  windowSizeMinute: 5
+  esIndexName: urls
+  esIpAndPort: 0.0.0.0:9200
