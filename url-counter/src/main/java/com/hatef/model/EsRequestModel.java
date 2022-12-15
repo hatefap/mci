@@ -3,11 +3,15 @@ package com.hatef.model;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@NoArgsConstructor
 @Slf4j
 public class EsRequestModel {
     private Integer from;
     private Integer size;
+
+    public EsRequestModel(Integer from, Integer size) {
+        setFrom(from);
+        setSize(size);
+    }
 
     public int getFrom() {
         return from;

@@ -8,4 +8,5 @@ import java.util.List;
 public interface UrlRepository {
     boolean createIndex(EsUrlDataModel doc);
     List<EsUrlDataModel> search(EsRequestModel request);
+    List<EsUrlDataModel> topKVisit(int k);
 }
