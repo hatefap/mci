@@ -1,6 +1,5 @@
 package com.hatef.model;
 
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

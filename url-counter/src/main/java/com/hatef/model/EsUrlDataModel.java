@@ -1,9 +1,6 @@
 package com.hatef.model;
 
 import lombok.*;
-import org.checkerframework.checker.index.qual.NegativeIndexFor;
-
-import java.time.Instant;
 
 @Builder
 @ToString
