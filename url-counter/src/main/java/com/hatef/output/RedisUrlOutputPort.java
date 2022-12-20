@@ -27,7 +27,7 @@ public class RedisUrlOutputPort implements UrlOutputPort {
         // TODO: How to make this operation atomic?
         var currentVal = hashOps.get(HASH_KEY_NAME, url);
         var newVal = currentVal == null ? 1 : currentVal + 1;
-        hashOps.put(HASH_KEY_NAME, url, currentVal == null ? 1 : currentVal + 1);
+        hashOps.put(HASH_KEY_NAME, url, newVal);
         return newVal;
     }
 
