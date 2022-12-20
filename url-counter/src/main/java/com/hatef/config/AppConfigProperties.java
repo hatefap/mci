@@ -11,4 +11,7 @@ public class AppConfigProperties {
     private int minSeenToStore;
     private int windowSizeMinute;
     private String esIndexName;
+    private int redisScanBatchSize;
+    private String redisHost;
+    private int redisPort;
 }

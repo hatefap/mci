@@ -10,6 +10,9 @@ kafka.consumer:
 
 app:
   minSeenToStore: 3
-  windowSizeMinute: 5
+  windowSizeMinute: 3
   esIndexName: urls
   esIpAndPort: 0.0.0.0:9200
+  redisScanBatchSize: 10000
+  redisHost: localhost
+  redisPort: 6379

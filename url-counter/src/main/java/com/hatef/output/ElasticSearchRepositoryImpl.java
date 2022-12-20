@@ -30,10 +30,10 @@ public class ElasticSearchRepositoryImpl implements UrlRepository {
     public boolean createIndex(EsUrlDataModel doc) {
         var request = IndexRequest.of(
                 builder -> builder.index(index).document(doc));
-        try{
+        try {
             esClient.index(request);
             return true;
-        } catch (IOException ex){
+        } catch (IOException ex) {
             log.error("Error while saving doc: " + doc + " to ElasticSearch server.", ex);
         }
         return false;
@@ -56,7 +56,7 @@ public class ElasticSearchRepositoryImpl implements UrlRepository {
     @SneakyThrows
     @Override
     public List<EsUrlDataModel> topKVisit(int k) {
-        if(k <= 0)
+        if (k <= 0)
             return Collections.emptyList();
         var sort = new SortOptions
                 .Builder()

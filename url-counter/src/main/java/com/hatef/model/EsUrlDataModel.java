@@ -1,15 +1,16 @@
 package com.hatef.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Builder
-@ToString
-@EqualsAndHashCode
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class EsUrlDataModel {
     private String url;
     private long timestamp;
-    private int numberOfSeen;
+    private long numberOfSeen;
 }

@@ -1,9 +1,12 @@
 package com.hatef.config;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import com.google.common.primitives.Longs;
 import com.hatef.handler.WindowCountMessageHandler;
 import com.hatef.model.EsUrlDataModel;
 import com.hatef.output.ElasticSearchRepositoryImpl;
+import com.hatef.output.RedisUrlOutputPort;
+import com.hatef.output.UrlOutputPort;
 import com.hatef.output.UrlRepository;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,6 +16,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchConfiguration;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.SerializationException;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.channel.QueueChannel;
 import org.springframework.integration.dsl.IntegrationFlow;
@@ -74,9 +83,9 @@ public class AppConfig {
 
     @Bean
     public WindowCountMessageHandler getElasticSearchMessageHandler(
-            @Qualifier(value = "esChannel") PollableChannel outputChannel) {
+            @Qualifier(value = "esChannel") PollableChannel outputChannel, UrlOutputPort urlOutputPort) {
         return new WindowCountMessageHandler(appConfigProperties.getMinSeenToStore(),
-                appConfigProperties.getWindowSizeMinute(), outputChannel);
+                appConfigProperties.getWindowSizeMinute(), outputChannel, urlOutputPort);
     }
 
     @Bean
@@ -113,6 +122,40 @@ public class AppConfig {
                 .get();
     }
 
+    @Bean
+    public UrlOutputPort urlOutputPort(RedisTemplate<String, Long> redisTemplate){
+        return new RedisUrlOutputPort(redisTemplate, appConfigProperties.getRedisScanBatchSize());
+    }
+
+    @Bean
+    public RedisTemplate<String, Long> redisTemplate() {
+        var redisConfiguration = new RedisStandaloneConfiguration();
+        redisConfiguration.setHostName(appConfigProperties.getRedisHost());
+        redisConfiguration.setPort(appConfigProperties.getRedisPort());
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(redisConfiguration);
+        jedisConnectionFactory.afterPropertiesSet();
+        RedisTemplate<String, Long> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(jedisConnectionFactory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new LongSerializer());
+        redisTemplate.setEnableTransactionSupport(true);
+        redisTemplate.afterPropertiesSet();
+        return redisTemplate;
+    }
+
+    static class LongSerializer implements RedisSerializer<Long>{
+
+        @Override
+        public byte[] serialize(Long aLong) throws SerializationException {
+            return Longs.toByteArray(aLong);
+        }
+
+        @Override
+        public Long deserialize(byte[] bytes) throws SerializationException {
+            return Longs.fromByteArray(bytes);
+        }
+    }
     @Configuration
     static class ElasticsearchClientConfig extends ElasticsearchConfiguration {
         private final String ipAndPort;
