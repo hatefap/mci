@@ -45,7 +45,6 @@ public class WindowCountMessageHandler extends AbstractMessageHandler {
                 urlOutputPort.deleteUrl(entry.getKey());
                 return;
             }
-            System.out.println(Thread.currentThread().getName() + " " + entry);
             EsUrlDataModel payload = EsUrlDataModel.builder()
                     .url(entry.getKey())
                     .timestamp(Instant.now().toEpochMilli())
