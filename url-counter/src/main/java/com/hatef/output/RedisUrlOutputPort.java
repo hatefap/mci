@@ -25,6 +25,7 @@ public class RedisUrlOutputPort implements UrlOutputPort {
          *   https://stackoverflow.com/questions/74847936/spring-boot-throws-eofexception-when-reading-from-redis
          * */
         // TODO: How to make this operation atomic?
+
         var currentVal = hashOps.get(HASH_KEY_NAME, url);
         var newVal = currentVal == null ? 1 : currentVal + 1;
         hashOps.put(HASH_KEY_NAME, url, newVal);
